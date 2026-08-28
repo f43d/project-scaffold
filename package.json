@@ -1,0 +1,12 @@
+{
+  "name": "project-scaffold",
+  "version": "1.0.0",
+  "description": "Documented, AI-friendly project convention starter kit.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "end-of-day": "node scripts/end-of-day.mjs",
+    "end-of-day:md": "node scripts/end-of-day.mjs --markdown"
+  },
+  "license": "MIT"
+}

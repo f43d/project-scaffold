@@ -31,7 +31,7 @@ When you (or your AI agent) say **"call it a day"**, follow this disciplined clo
    - `docs/sessions/<today>.md` (or append to existing) — log of what was done, why, open questions.
    - `docs/DECISIONS.md` — append-only entry if any non-trivial decision was made.
    - `CHANGELOG.md` — user-facing entry if anything visitors will see changed.
-3. Show the drafts to the user. **Do not write them to disk yet.**
+3. Show the drafts to the user as readable preview. **Do not write them to disk yet.**
 4. Wait for the user to approve / edit / drop them.
 5. On approval: write the files, commit (`docs(session): end-of-day <date>`), and ask for a token to push.
 
@@ -49,8 +49,37 @@ When you (or your AI agent) say **"call it a day"**, follow this disciplined clo
 
 ### Discipline
 
+- **Show drafts FIRST, write SECOND.** The agent must not write any file to disk until the owner has seen and approved the drafts. The owner may want to edit before commit.
+- **The PAT is used at most once per session, then revoked.** See "PAT reminder policy" below.
 - If a session has no real decision (e.g. typo fixes, dependency bumps), still write a session log but skip `DECISIONS.md`.
 - If a session only touches internal plumbing (CI, types), still write a session log but skip `CHANGELOG.md`.
+
+## PAT reminder policy
+
+The agent needs the GitHub PAT to push commits throughout the session. Reminding mid-session prompts the owner to revoke mid-session, breaking the workflow.
+
+- **Remind the owner to revoke the PAT once**, at the actual end of the session.
+- Trigger phrases: "call it a day", "we're done for now", "stop for the night", or equivalent.
+- **Do not** remind after every commit.
+- **Do not** remind if the session has already ended once in the same calendar day.
+- See also `AGENTS.md` §"Token / security reminder policy".
+
+## Secure push with PAT
+
+A PAT pasted in chat must never be written to `.git/config` persistently, and should never be in shell history. Use the `scripts/push-with-pat.sh` helper:
+
+```bash
+./scripts/push-with-pat.sh github_pat_xxxx origin main
+```
+
+What it does:
+
+1. Writes the PAT to a temp file with `umask 077` + `chmod 700` (only the running shell can read it).
+2. Sets `GIT_ASKPASS` to a script that echoes the PAT, so git can read it without env-vars or shell history.
+3. Runs `git push origin main` with `credential.helper=` cleared (so git uses `GIT_ASKPASS`).
+4. `shred -u`s the temp file on the way out, regardless of push success/failure.
+
+Why this matters: pasting the PAT into `git remote set-url https://…@github.com/…` would write it to `.git/config` — recoverable later. Pasting it in a normal `git push` invocation puts it in `~/.bash_history`. This pattern avoids both.
 
 ## Common gotchas
 

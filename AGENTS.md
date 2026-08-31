@@ -31,6 +31,7 @@ If you are an AI agent reading this: **stop, read this file first**, then read `
 > - Design tokens live exclusively in `src/styles/tokens.css` `:root` — change colours/fonts there.
 > - **Tabular site content** lives in `data/*.env` (pipe-separated, see `docs/OPERATIONS.md` §"Data files"). Never JSON/YAML for content humans edit by hand.
 > - Commit messages: `<type>(<scope>): <summary>` (e.g. `gallery: replace lightbox`).
+> - **End-of-day commit prefix**: `docs(session): end-of-day YYYY-MM-DD — summary` — keeps session log commits easy to find in `git log`.
 > - AI-authored commits get `Co-authored-by: opencode <noreply@opencode>` (or your agent's tag) in the trailer.
 > - When making a non-trivial decision, append to `docs/DECISIONS.md`. State the **decision**, **context**, **alternatives rejected**, **consequence**.
 > - When finishing a session of work, run `npm run end-of-day` (or your package's equivalent). The agent must produce draft updates, get your approval, then commit + push.
@@ -44,11 +45,23 @@ If you are an AI agent reading this: **stop, read this file first**, then read `
 > - Don't enable dark mode by default unless that's the design.
 > - Don't switch off the historical &lt;design palette name&gt; palette defined in `docs/DECISIONS.md`.
 
+## Token / security reminder policy
+
+**The agent needs the GitHub PAT to keep pushing during a session. Reminding mid-session adds noise that prompts the owner to revoke mid-session and breaks the workflow.**
+
+- Remind the owner to revoke the PAT **once**, at the actual end of the session.
+- Trigger phrases that count as "actual end": "call it a day", "we're done for now", "stop for the night", or equivalent.
+- Do **not** remind after every commit.
+- Do **not** remind if the session has already ended once and the owner is mid-task again in the same calendar day.
+
 ## Where to look first
 
 1. `docs/DECISIONS.md` — every trade-off explained
 2. `docs/HISTORY.md` — what came from previous versions (if any)
 3. `docs/ARCHITECTURE.md` — data flow + deploy + integration flow
 4. `docs/OPERATIONS.md` — env vars, secrets, debugging, common gotchas
-5. `docs/sessions/` — chronological log of recent changes
-6. `CHANGELOG.md` — user-facing log
+5. `docs/AI-WORKFLOW.md` — when to install which AI-agent plugin (skip if your project doesn't use one)
+6. `docs/HANDOFF.md` — the start-here brief from the previous session (read this if the repo has been quiet for a while)
+7. `docs/PERMANENCE.md` — long-term survival plan (only for long-lived projects)
+8. `docs/sessions/` — chronological log of recent changes
+9. `CHANGELOG.md` — user-facing log

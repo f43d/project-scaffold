@@ -35,6 +35,7 @@ If you are an AI agent reading this: **stop, read this file first**, then read `
 > - AI-authored commits get `Co-authored-by: opencode <noreply@opencode>` (or your agent's tag) in the trailer.
 > - When making a non-trivial decision, append to `docs/DECISIONS.md`. State the **decision**, **context**, **alternatives rejected**, **consequence**.
 > - When finishing a session of work, run `npm run end-of-day` (or your package's equivalent). The agent must produce draft updates, get your approval, then commit + push.
+> - **Comment the code for BOTH humans and AI agents** — see `docs/CODE-COMMENTS.md`. Every file, component, section and non-obvious line should carry a short "what / why" note. The reader may be a family member with no prior context, or a future AI session that has never seen this repo. A block comment that explains *why* a decision was made beats five inline comments that restate the code. When a future session finds unexplained code, it is expected to ADD the missing comment rather than skip past it.
 
 ## Things to never do (without explicit ask)
 
@@ -44,6 +45,7 @@ If you are an AI agent reading this: **stop, read this file first**, then read `
 > - Don't add analytics / trackers unless asked.
 > - Don't enable dark mode by default unless that's the design.
 > - Don't switch off the historical &lt;design palette name&gt; palette defined in `docs/DECISIONS.md`.
+> - Don't strip or "clean up" explanatory comments during a refactor — a comment that survives is cheaper than re-deriving the why later. If a comment is wrong, fix the comment alongside the code.
 
 ## Token / security reminder policy
 

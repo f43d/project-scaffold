@@ -30,6 +30,7 @@ Read these in this order before doing anything:
 > - **Three shared modules** in `src/lib/`: `types.ts` (data shapes), `parseEnv.ts` (env parser + cache), `utils.ts` (`pickRandomInt`, `formatBytes`, `escapeHtml`).
 > - **Commit messages**: `<type>(<scope>): <summary>`. End-of-day commits prefix with `docs(session): …`. Include a body paragraph explaining the **why** for non-trivial changes.
 > - **AI-authored commits** carry `Co-authored-by: opencode <noreply@opencode>` in the trailer.
+> - **Code comments**: written for both humans and AI agents — see `docs/CODE-COMMENTS.md`. Every file/component/section carries a "what / why" header; non-obvious lines (CSS tricks, browser workarounds, parser quirks) are annotated.
 > - **End-of-day routine** (see `AGENTS.md`): when the user says "call it a day", run `npm run end-of-day`, draft session log + DECISIONS + CHANGELOG entries, **show drafts**, wait for confirmation, commit, push, then remind ONCE about PAT revocation.
 
 ## Current state at handoff (date: YYYY-MM-DD)

@@ -15,6 +15,10 @@ This isn't a framework — it's a **convention** plus one small Node script. Dro
 │   ├── DECISIONS.md               # append-only design log
 │   ├── HISTORY.md                 # notable history entries
 │   ├── OPERATIONS.md              # day-2 ops, env vars, gotchas
+│   ├── AI-WORKFLOW.md             # when to install which AI-agent plugin
+│   ├── HANDOFF.md                 # start-here brief for the next session
+│   ├── PERMANENCE.md              # long-term survival plan (optional, long-lived only)
+│   ├── CODE-COMMENTS.md           # how to comment code for humans + AI agents
 │   └── sessions/
 │       └── YYYY-MM-DD-<slug>.md   # one per working day
 ├── scripts/

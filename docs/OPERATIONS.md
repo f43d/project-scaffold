@@ -53,6 +53,7 @@ When you (or your AI agent) say **"call it a day"**, follow this disciplined clo
 - **The PAT is used at most once per session, then revoked.** See "PAT reminder policy" below.
 - If a session has no real decision (e.g. typo fixes, dependency bumps), still write a session log but skip `DECISIONS.md`.
 - If a session only touches internal plumbing (CI, types), still write a session log but skip `CHANGELOG.md`.
+- **Backfill comments on the code you touched.** Scan the diff before closing out: any file that gained logic or lost a comment during the session should be commented per `docs/CODE-COMMENTS.md`. The end-of-day is the natural moment to do it, while the why is still fresh in context.
 
 ## PAT reminder policy
 

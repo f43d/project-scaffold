@@ -1,16 +1,15 @@
 # History
 
-Recent notable history of this project. The oldest entries live at the bottom; if you backfill from older history, prepend.
+Recent notable history of this project. Oldest at the bottom; prepend backfills.
 
 Format per entry:
-
 ```
 ## YYYY-MM-DD — short title
-- What was happening before this change.
+- What was happening before.
 - What changed.
 - Why.
 ```
 
 ---
 
-<!-- Oldest entry at the bottom -->
+<!-- oldest entry at the bottom -->

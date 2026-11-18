@@ -1,0 +1,13 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  // Non-AGENTS.md guidance loaded after AGENTS.md, in this order.
+  // AGENTS.md is auto-discovered; put the rest here so every session sees them.
+  "instructions": [
+    "docs/DECISIONS.md",
+    "docs/OPERATIONS.md"
+  ],
+  // Enables the built-in todo list for multi-step work.
+  "experimental": {
+    "todo": true
+  }
+}

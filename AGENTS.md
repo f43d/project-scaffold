@@ -1,69 +1,104 @@
 # AGENTS.md — Project context for AI agents (and humans)
 
-If you are an AI agent reading this: **stop, read this file first**, then read `docs/ARCHITECTURE.md` and `docs/DECISIONS.md` before doing any work.
+> **AI agent: read this whole file before doing anything.** It is the single source of truth
+> for *how this project works*. `docs/HANDOFF.md` is the *current state*; do not repeat the
+> conventions below there.
+
+## The mental model (four layers)
+
+Don't write one giant prompt. Split every request into the smallest layer that solves it:
+
+| Layer | Where it lives | When to use |
+|---|---|---|
+| **Rules** | `AGENTS.md` (this file) | A permanent fact about the project: commands, conventions, types, "definition of done" |
+| **Skills** | `.opencode/skills/<id>/SKILL.md` | A workflow you'll repeat more than once, exactly the same way |
+| **MCP** | `opencode.jsonc` → `mcp.servers` | External context/action the source code alone can't prove (browser, a data API) |
+| **Task prompt** | your chat message | The *only* thing that should change per request |
+
+**Routing checklist** — when unsure where something goes:
+1. Permanent project rule? → `AGENTS.md`
+2. Will I repeat this workflow exactly? → make it a **skill**
+3. Needs external context/action? → wire it as **MCP**
+4. Something failed and unclear why? → **diagnose before rewriting**
+5. Otherwise → keep it in the task prompt. Prefer the *smallest* layer.
+
+If you catch yourself cramming rules + test commands + tool access + the task into one prompt,
+step back and split it into layers.
 
 ## What this project is
 
-> _Replace this section with 2–4 sentences about the project. Try to answer: what is it, who is it for, where does it live (URL/repo)._
+> _Replace: 2–4 sentences. What is it, who is it for, where does it live (repo URL)?_
 
-## Stack — do not deviate without updating DECISIONS.md
+## Stack — do not deviate without updating `docs/DECISIONS.md`
 
-> _List the frameworks, languages, services and constraints. e.g.:_
-> - **Language**: TypeScript (strict)
-> - **Runtime**: Node 20 LTS (no other Runtimes)
-> - **Build**: Vite, output `dist/` (committed by CI, never by you)
-> - **Deploy**: GitHub Pages via Actions, custom domain via `public/CNAME`
-> - **Forbidden**: Tailwind, jQuery, anything not in `package.json`
+> _List languages/frameworks/constraints. Example (Python tooling):_
+> - **Language**: Python 3.13, stdlib-only where possible (no pip unless justified)
+> - **Data**: fetched via a CLI / API wrapper; scripts live in `scripts/`
+> - **Output**: `output/` is generated (gitignored)
+> - **Forbidden**: anything not listed here without a `DECISIONS.md` entry
 
-## Build / dev / deploy
+## Build / dev / test (canonical commands)
 
-> _Replace with the canonical commands in this project. Read them out of `package.json` or `Makefile`._
+> _Read these out of the project's real tooling. The agent must run them, not guess._
 
 ```bash
-# install, dev, build, test — whatever this project has
+# install / run / test / lint / typecheck — whatever this project has
 ```
+
+## Roles (for anything non-trivial)
+
+Use `.opencode/agents/` when a task is big enough to separate concerns:
+
+- **planner** — examines the code, returns a complete plan (API, UI, auth, test coverage, proof)
+  and is **forbidden from editing**. Wait for human approval.
+- **executor** — implements *only* the approved plan, following `AGENTS.md` + existing patterns.
+- **reviewer** — reports concrete defects + missing tests with file references. **Report only, no edits.**
 
 ## Conventions
 
-> _Codify the rules so an agent can apply them without asking you._
-> - File naming: `kebab-case.<ext>` for sources, `PascalCase.astro` for components.
-> - All user-facing strings are localized to &lt;lang code&gt; at `src/i18n/&lt;lang&gt;.json`.
-> - Design tokens live exclusively in `src/styles/tokens.css` `:root` — change colours/fonts there.
-> - **Tabular site content** lives in `data/*.env` (pipe-separated, see `docs/OPERATIONS.md` §"Data files"). Never JSON/YAML for content humans edit by hand.
-> - Commit messages: `<type>(<scope>): <summary>` (e.g. `gallery: replace lightbox`).
-> - **End-of-day commit prefix**: `docs(session): end-of-day YYYY-MM-DD — summary` — keeps session log commits easy to find in `git log`.
-> - AI-authored commits get `Co-authored-by: opencode <noreply@opencode>` (or your agent's tag) in the trailer.
-> - When making a non-trivial decision, append to `docs/DECISIONS.md`. State the **decision**, **context**, **alternatives rejected**, **consequence**.
-> - When finishing a session of work, run `npm run end-of-day` (or your package's equivalent). The agent must produce draft updates, get your approval, then commit + push.
-> - **Comment the code for BOTH humans and AI agents** — see `docs/CODE-COMMENTS.md`. Every file, component, section and non-obvious line should carry a short "what / why" note. The reader may be a family member with no prior context, or a future AI session that has never seen this repo. A block comment that explains *why* a decision was made beats five inline comments that restate the code. When a future session finds unexplained code, it is expected to ADD the missing comment rather than skip past it.
+> _Codify rules so an agent can apply them without asking. e.g.:_
+> - File naming: `snake_case.py`; scripts are single-purpose CLI tools in `scripts/`.
+> - Every script has a `--help`-style docstring + `if __name__ == "__main__":`.
+> - Secrets live in env vars / a gitignored file; never in the repo.
+> - Commit messages: `<type>(<scope>): <summary>` (e.g. `fix(dividends): …`).
+> - AI-authored commits carry `Co-authored-by: opencode <noreply@opencode>`.
+> - Comment the **why** on non-obvious lines — see `docs/CODE-COMMENTS.md`.
+
+## Proactive check-in (important)
+
+**Before making a non-trivial change** (new feature, refactor, dependency add, deleting a doc,
+changing a convention), pause and **tell the user what you're about to do and why**, and wait
+for a go-ahead unless they already approved it. Do not surprise them with big changes.
+A non-trivial decision also gets an entry in `docs/DECISIONS.md`.
+
+## End-of-day routine ("call it a day")
+
+When the user says **"call it a day"** (or "wrap up", "we're done for now"), run the
+`/call-it-a-day` command (or `python3 scripts/end-of-day.py` directly). It:
+1. Snapshots what changed since the last session file.
+2. Drafts three updates: `docs/sessions/<today>.md`, an optional `docs/DECISIONS.md` entry,
+   an optional `CHANGELOG.md` entry.
+3. **Shows the drafts and waits for approval before writing.**
+4. On approval, writes, commits (`docs(session): end-of-day <date>`), and pushes.
+
+Full protocol: `docs/OPERATIONS.md` §"End-of-day routine".
 
 ## Things to never do (without explicit ask)
 
-> _Project-specific guardrails._
-> - Don't add a runtime backend without an explicit request.
-> - Don't commit secrets — `.env` is gitignored. Use the project's secret store.
-> - Don't add analytics / trackers unless asked.
-> - Don't enable dark mode by default unless that's the design.
-> - Don't switch off the historical &lt;design palette name&gt; palette defined in `docs/DECISIONS.md`.
-> - Don't strip or "clean up" explanatory comments during a refactor — a comment that survives is cheaper than re-deriving the why later. If a comment is wrong, fix the comment alongside the code.
-
-## Token / security reminder policy
-
-**The agent needs the GitHub PAT to keep pushing during a session. Reminding mid-session adds noise that prompts the owner to revoke mid-session and breaks the workflow.**
-
-- Remind the owner to revoke the PAT **once**, at the actual end of the session.
-- Trigger phrases that count as "actual end": "call it a day", "we're done for now", "stop for the night", or equivalent.
-- Do **not** remind after every commit.
-- Do **not** remind if the session has already ended once and the owner is mid-task again in the same calendar day.
+> _Project guardrails. e.g.:_
+> - Don't commit secrets or `.env` files.
+> - Don't add a dependency without a `DECISIONS.md` entry.
+> - Don't strip explanatory comments during a refactor — fix them if wrong, don't delete the *why*.
+> - Don't run commands that modify the system (installs, deletes) without asking first.
 
 ## Where to look first
 
-1. `docs/DECISIONS.md` — every trade-off explained
-2. `docs/HISTORY.md` — what came from previous versions (if any)
-3. `docs/ARCHITECTURE.md` — data flow + deploy + integration flow
-4. `docs/OPERATIONS.md` — env vars, secrets, debugging, common gotchas
-5. `docs/AI-WORKFLOW.md` — when to install which AI-agent plugin (skip if your project doesn't use one)
-6. `docs/HANDOFF.md` — the start-here brief from the previous session (read this if the repo has been quiet for a while)
-7. `docs/PERMANENCE.md` — long-term survival plan (only for long-lived projects)
-8. `docs/sessions/` — chronological log of recent changes
-9. `CHANGELOG.md` — user-facing log
+0. `docs/SCAFFOLD-EVOLUTION.md` — why this scaffold looks the way it does (read before refining it)
+1. `docs/HANDOFF.md` — current state + open items (start here if the repo has been quiet)
+2. `docs/DECISIONS.md` — every trade-off, with rejected alternatives
+3. `docs/ARCHITECTURE.md` — data / deploy / integration flow
+4. `docs/OPERATIONS.md` — env vars, secrets, gotchas, end-of-day protocol
+5. `docs/HISTORY.md` — notable past versions
+6. `docs/AI-WORKFLOW.md` — owner notes on agents/plugins/LLMs (personal, not rules)
+7. `docs/sessions/` — chronological per-day log (latest = most recent)
+8. `CHANGELOG.md` — user-facing log

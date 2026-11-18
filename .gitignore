@@ -1,14 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Node (if used)
 node_modules/
+
+# Build / output
 dist/
 build/
 out/
-.astro/
-.next/
-.cache/
-.DS_Store
+output/
+
+# Secrets
 .env
 .env.*
 !.env.example
+*gsa*.json
+
+# OS / editor
+.DS_Store
 *.log
-coverage/
-.nyc_output/
+.idea/
+.vscode/

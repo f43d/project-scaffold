@@ -1,83 +1,79 @@
-# project-scaffold
+# project-scaffold (v2)
 
-A starter kit for repos that follow a **documented, AI-friendly workflow**.
+A starter kit for repos that follow a **documented, AI-friendly workflow**, built around the
+**four-layer model** for the opencode AI tool: **rules (`AGENTS.md`) → skills → MCP → task prompt**.
 
-This isn't a framework — it's a **convention** plus one small Node script. Drop the structure into a new repo, customize `AGENTS.md` for your stack, and every working session automatically produces a written trail of decisions, ops notes, and per-day session logs.
+Drop this structure into a new repo, customize `AGENTS.md` for your stack, and every session
+automatically produces a written trail of decisions, ops notes, and per-day session logs.
 
 ## Layout
 
 ```
 .
-├── AGENTS.md                      # root context for AI agents (read first!)
-├── CHANGELOG.md                   # user-facing
-├── docs/
-│   ├── ARCHITECTURE.md            # data + deploy + integration flow
-│   ├── DECISIONS.md               # append-only design log
-│   ├── HISTORY.md                 # notable history entries
-│   ├── OPERATIONS.md              # day-2 ops, env vars, gotchas
-│   ├── AI-WORKFLOW.md             # when to install which AI-agent plugin
-│   ├── HANDOFF.md                 # start-here brief for the next session
-│   ├── PERMANENCE.md              # long-term survival plan (optional, long-lived only)
-│   ├── CODE-COMMENTS.md           # how to comment code for humans + AI agents
-│   └── sessions/
-│       └── YYYY-MM-DD-<slug>.md   # one per working day
+├── AGENTS.md                      # root context for AI agents (single source of conventions)
+├── CHANGELOG.md                   # user-facing log
+├── README.md
+├── opencode.jsonc                 # instructions array + experimental todo
+├── .opencode/
+│   ├── commands/                  # slash commands: /resume /bootstrap /call-it-a-day
+│   ├── agents/                    # subagents: planner / executor / reviewer
+│   └── skills/review-change/      # canonical repeatable review workflow
 ├── scripts/
-│   └── end-of-day.mjs             # `npm run end-of-day` snapshot tool
-└── .github/
-    └── ISSUE_TEMPLATE/
-        ├── bug_report.md
-        └── feature_request.md
+│   ├── end-of-day.py              # snapshot + heuristics for the end-of-day routine
+│   └── push-with-pat.sh           # safe push without leaking a PAT
+└── docs/
+    ├── HANDOFF.md                 # current state + open items (start-here)
+    ├── DECISIONS.md               # append-only design log (with rejected alternatives)
+    ├── OPERATIONS.md              # day-2 ops, env vars, gotchas, end-of-day protocol
+    ├── ARCHITECTURE.md            # data + deploy + integration flow
+    ├── HISTORY.md                 # notable version history
+    ├── PERMANENCE.md              # OPTIONAL — long-term survival / successor plan
+    ├── CODE-COMMENTS.md           # how to comment for humans + AI agents
+    ├── AI-WORKFLOW.md             # owner's notes on agents/plugins/LLMs
+    └── sessions/                  # one markdown file per working day
 ```
 
-## How to use this for a new project
-
-### Path A — clone and strip
+## Adopt for a new project
 
 ```bash
-# Pick a target directory
-git clone https://github.com/f43d/project-scaffold.git my-new-thing
+git clone https://github.com/<owner>/project-scaffold.git my-new-thing
 cd my-new-thing
-rm -rf .git
-git init -b main
-# Add your source code: src/, package.json, etc.
-# Edit AGENTS.md to describe the new stack.
-# First commit.
+rm -rf .git && git init -b main
+# add your source; edit AGENTS.md for the stack
+# then run the /bootstrap command to auto-fill AGENTS.md from your repo
+git add -A && git commit -m "chore: scaffold"
 ```
 
-### Path B — use as a Github template
-
-This repo will be marked as a [GitHub template repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-template-repository) once the owner enables it. Then `Use this template` → done.
-
-## How to retrofit an existing repo
+## Retrofit an existing repo
 
 ```bash
-cd path/to/your-existing-repo
-
-# Pull the kit files
-curl -L -o scripts/end-of-day.mjs https://raw.githubusercontent.com/f43d/project-scaffold/main/scripts/end-of-day.mjs
-
-mkdir -p docs/sessions
-echo "" > docs/DECISIONS.md
-# (write initial headers as in this repo's docs/DECISIONS.md)
-
-# Write an AGENTS.md based on this template's, customized for the project.
-
-# Backfill: capture what's happened so far
-echo "# 2024-... — initial backfill (no per-day logs yet)" > docs/sessions/2024-01-01-backfill.md
-# Add a paragraph describing major historical events.
+cd path/to/existing-repo
+# copy in AGENTS.md, opencode.jsonc, .opencode/, scripts/, docs/
+# write an initial docs/DECISIONS.md header
+# backfill: echo "# YYYY-MM-DD — initial backfill" > docs/sessions/YYYY-MM-DD-backfill.md
 ```
 
 ## The end-of-day routine
 
-When the owner (or their AI agent) says **"call it a day"**:
+When you (or your agent) say **"call it a day"**, the agent runs `/call-it-a-day`
+(`python3 scripts/end-of-day.py`), drafts a session log + optional DECISIONS/CHANGELOG
+entries, **shows you the drafts, waits for approval**, then commits and pushes.
+Total: **2–5 minutes**. See `docs/OPERATIONS.md` §"End-of-day routine".
 
-1. The agent runs `npm run end-of-day` (or `node scripts/end-of-day.mjs` directly if no `package.json`).
-2. The script outputs a JSON snapshot of what changed since the last session file, plus heuristic suggestions.
-3. The agent drafts three updates: a session file, an optional DECISIONS entry, and an optional CHANGELOG entry.
-4. The owner reviews / edits the drafts.
-5. On confirmation, the agent writes the files, commits, and pushes.
+## The four-layer model (tl;dr)
 
-Total elapsed time: **2–5 minutes**. See `docs/OPERATIONS.md` §"End-of-day routine" for the full protocol.
+| Layer | Where | When |
+|---|---|---|
+| Rules | `AGENTS.md` | permanent project facts |
+| Skills | `.opencode/skills/` | a workflow repeated exactly |
+| MCP | `opencode.jsonc` | external context/action |
+| Task | your message | the only thing that changes per request |
+
+## History & reasoning
+
+Why this scaffold looks the way it does, and what changed from v1 → v2 (with the rejected
+alternatives and sources) is documented in **`docs/SCAFFOLD-EVOLUTION.md`** — read it before
+refining the template again.
 
 ## License
 

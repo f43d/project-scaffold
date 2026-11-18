@@ -1,6 +1,6 @@
 # Decision log
 
-**Append-only.** Newest entry at the bottom. Each entry has:
+**Append-only.** Newest entry at the bottom. Each entry:
 
 ```
 ## YYYY-MM-DD — short title
@@ -11,16 +11,15 @@
 - **Cost to revisit**:
 ```
 
-Capturing the rejected alternatives is what makes future agents work well — they don't have to re-argue settled points.
+Capturing the rejected alternatives is what makes future agents work well — they don't have to
+re-argue settled points.
 
 ---
 
-<!-- Newest entry at the bottom -->
+## YYYY-MM-DD — adopt project-scaffold convention
 
-## YYYY-MM-DD — _sample first entry_
-
-- **Decision**: use the project-scaffold convention (this file, `docs/sessions/`, `AGENTS.md`, etc.) for &lt;your project&gt;.
-- **Context**: this is the first commit; no prior history.
-- **Alternatives rejected**: relying on git commit messages only, encoding decisions in code comments, or describing the project only in README.
-- **Consequence**: every change leaves a searchable record; every AI session starts with full context.
-- **Cost to revisit**: if the project grows to multi-team scale, replace this file with proper ADRs (`docs/adr/0001-*.md` etc.).
+- **Decision**: use this convention (`AGENTS.md`, `.opencode/`, `docs/sessions/`, `DECISIONS.md`, etc.).
+- **Context**: first commit; no prior history.
+- **Alternatives rejected**: relying on git messages only; decisions in code comments; README-only.
+- **Consequence**: every change leaves a searchable record; sessions start with full context.
+- **Cost to revisit**: if the project grows to multi-team scale, replace with ADRs (`docs/adr/0001-*.md`).

@@ -130,6 +130,8 @@ All nine docs retained: `AGENTS`, `HANDOFF`, `DECISIONS`, `OPERATIONS`, `ARCHITE
 - opencode runs in an **LXC** (control plane, e.g. `192.168.1.95`), **one project per LXC**.
 - opencode **cannot** reach the PVE host; it deploys by SSHing into other LXCs/VMs (e.g. `.96`, `.97`) using its `id_agent` identity, after the user manually creates the target and adds the public key.
 - Each project is **backed up to GitHub** and pushed via a **per-repo deploy key** (`core.sshCommand … IdentitiesOnly=yes`), never a PAT.
+- `scripts/push-with-pat.sh` is still shipped as a **fallback** for remotes where a deploy key isn't possible (e.g. a non-GitHub remote). Deploy keys are the primary method; the PAT helper is kept only for those edge cases, not as the recommended path.
+- **`rm -rf` is denied by the global policy**, so the scaffold's own instructions and commands must use `rm -r <specific>` (e.g. `rm -r .git`), never `rm -rf`. Applied to `README.md` and the global `/new-project` command on 2026-11-18.
 
 ---
 
@@ -137,8 +139,8 @@ All nine docs retained: `AGENTS`, `HANDOFF`, `DECISIONS`, `OPERATIONS`, `ARCHITE
 
 1. **`.opencode/commands/` (plural) vs `command/` (singular)** — docs call singular "legacy". Confirm which the installed opencode build actually loads; rename if needed.
 2. **MCP template** — add commented `mcp.servers` examples (browser, data APIs) to `opencode.jsonc`.
-3. **`/new-project` command** — automate "clone scaffold → git init → pin deploy key → bootstrap → register SSH host" for the next LXC.
-4. **Global guardrails** — a `~/.config/opencode/AGENTS.md` + `permissions`/`policies` block for cross-project safety (no PVE access, deny `sudo`/`ssh`/`rm -rf`, etc.).
+3. **`/new-project` command** — ✅ done 2026-11-18, as a **global** command at `~/.config/opencode/commands/new-project.md` (host-specific paths/org, so kept global rather than in the scaffold). A portable version could still be added here later.
+4. **Global guardrails** — ✅ done 2026-11-18: `~/.config/opencode/AGENTS.md` + a `policies` deny block in `opencode.jsonc` (deny `sudo`, `rm -rf`, `shutdown`/`reboot`/`poweroff`/`halt`, `pvesh`/`pct`/`qm`, `mkfs`, `dd`).
 5. **Per-stack variants** — if non-Python projects appear, factor the Python-specific bits into an optional overlay rather than a second scaffold.
 6. **`scripts/end-of-day.py` heuristics** — the file-path heuristics (which files count as "user-visible" / "decision") are currently generic; tune them to Python layouts.
 

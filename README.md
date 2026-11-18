@@ -38,7 +38,7 @@ automatically produces a written trail of decisions, ops notes, and per-day sess
 ```bash
 git clone https://github.com/<owner>/project-scaffold.git my-new-thing
 cd my-new-thing
-rm -rf .git && git init -b main
+rm -r .git && git init -b main
 # add your source; edit AGENTS.md for the stack
 # then run the /bootstrap command to auto-fill AGENTS.md from your repo
 git add -A && git commit -m "chore: scaffold"

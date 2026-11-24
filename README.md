@@ -11,6 +11,7 @@ automatically produces a written trail of decisions, ops notes, and per-day sess
 ```
 .
 ├── AGENTS.md                      # root context for AI agents (single source of conventions)
+├── NEW-PROJECT-PROMPT.md          # orchestrator prompt: deploy a repo onto PVE from scratch
 ├── CHANGELOG.md                   # user-facing log
 ├── README.md
 ├── opencode.jsonc                 # instructions array + experimental todo
@@ -52,6 +53,14 @@ cd path/to/existing-repo
 # write an initial docs/DECISIONS.md header
 # backfill: echo "# YYYY-MM-DD — initial backfill" > docs/sessions/YYYY-MM-DD-backfill.md
 ```
+
+## Deploy a repo to your homelab (PVE)
+
+When starting a **new deployment** — a real GitHub repo onto your Proxmox homelab,
+not just adopting this scaffold — point an AI agent at **`NEW-PROJECT-PROMPT.md`**.
+It gathers requirements, assesses the target LXC/VM, researches the best tools and
+skills for the job, then produces a full plan for your approval before it builds
+anything.
 
 ## The end-of-day routine
 

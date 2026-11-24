@@ -16,7 +16,7 @@ automatically produces a written trail of decisions, ops notes, and per-day sess
 ├── README.md
 ├── opencode.jsonc                 # instructions array + experimental todo
 ├── .opencode/
-│   ├── commands/                  # slash commands: /resume /bootstrap /call-it-a-day
+│   ├── commands/                  # slash commands: /new-project /resume /bootstrap /call-it-a-day
 │   ├── agents/                    # subagents: planner / executor / reviewer
 │   └── skills/review-change/      # canonical repeatable review workflow
 ├── scripts/
@@ -57,10 +57,10 @@ cd path/to/existing-repo
 ## Deploy a repo to your homelab (PVE)
 
 When starting a **new deployment** — a real GitHub repo onto your Proxmox homelab,
-not just adopting this scaffold — point an AI agent at **`NEW-PROJECT-PROMPT.md`**.
-It gathers requirements, assesses the target LXC/VM, researches the best tools and
-skills for the job, then produces a full plan for your approval before it builds
-anything.
+not just adopting this scaffold — run the **`/new-project`** command (or point an AI
+agent at **`NEW-PROJECT-PROMPT.md`**). It gathers requirements, assesses the target
+LXC/VM, researches the best tools and skills for the job, then produces a full plan
+for your approval before it builds anything.
 
 ## The end-of-day routine
 

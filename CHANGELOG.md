@@ -2,6 +2,16 @@
 
 All notable changes to this scaffold. Format: newest first, one line unless context is needed.
 
+## [v2.1.0] — 2026-11-24
+
+New-project deployment orchestration.
+
+- **Added** `NEW-PROJECT-PROMPT.md` — an 8-stage orchestrator prompt that gathers requirements,
+  assesses the deploy target, researches tooling/skills, sets up the deploy key, and gates a full
+  plan on human approval.
+- **Added** `.opencode/commands/new-project.md` — `/new-project` command backing the prompt.
+- **Changed** `README.md` to document the prompt + command and the "deploy a repo to PVE" flow.
+
 ## [v2.0.0] — 2026-11-18
 
 Four-layer model (rules → skills → MCP → task), native opencode mechanics, Python-first tooling.
